@@ -252,16 +252,22 @@ module.exports = {
                 },
 
                 getCities: (req, res) => {
-                    sequelize.query(`SELECT * FROM cities AS city ON countries AS country`)
-                }
-                // couldn't put name in ${} format for some reason
+                    sequelize.query(`SELECT * FROM cities AS city ON countries AS country
+                    city.country_id = country.country_id`)
 
-                /* sequelize.query(
-                create table cities (
-                    city_id serial primary key,
-                    name varchar,
-                    rating integer,
-                    country_id integer)
-                    )
-                    */
+                .then(dbRes => res.status(200).send(dbRes[0]))
+                .catch(err => console.log(err))
+                },
+
+                deleteCity: (req, res) => {
+                    let{id} = req.params;
+
+                    sequelize.query(`DELETE FROM cities 
+                    WHERE city_id = ${id};`)
+
+                .then(dbRes => res.status(200).send(dbRes[0]))
+                .catch(err => console.log(err))
+                    }
+                // couldn't put name in ${} format for some reason
+                // need to go over last function syntax
             }
